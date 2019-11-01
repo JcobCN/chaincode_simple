@@ -74,3 +74,20 @@ func set(stub shim.ChaincodeStubInterface, args []string) (string, error){
 	return args[1], nil
 }
 
+//get 返回 指定 资产(asset) key 的 value
+func get(stub shim.ChaincodeStubInterface, args []string) (string, error){
+	if len(args) != 1{
+		return "", fmt.Errorf("参数不正确，需要一个 key")
+	}
+
+	value, err := stub.GetState(args[0])
+	if err != nil{
+		return "", fmt.Errorf("获取资产：%s失败，错误：%s\n", args[0], err)
+	}
+
+	if value == nil{
+		return "", fmt.Errorf("资产未找到：%s\n", args[0])
+	}
+
+	return string(value),nil
+}
