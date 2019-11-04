@@ -38,6 +38,7 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response{
 	// 提取 从交易信息中(proposal) 函数 和 参数
 	fn, args := stub.GetFunctionAndParameters()
 
+	fmt.Println("args", args)
 	var result string
 	var err error
 
@@ -61,7 +62,7 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response{
 
 //set 会储存asset （包括key 和 value） 在账本上， 如果key存在，则会用新的值覆盖(override) value
 func set(stub shim.ChaincodeStubInterface, args []string) (string, error){
-
+	fmt.Println("args", args)
 	if len(args) != 2{
 		return "", fmt.Errorf("参数出错， 需要一个 kye和value\n")
 	}
@@ -76,6 +77,7 @@ func set(stub shim.ChaincodeStubInterface, args []string) (string, error){
 
 //get 返回 指定 资产(asset) key 的 value
 func get(stub shim.ChaincodeStubInterface, args []string) (string, error){
+	fmt.Println("args", args)
 	if len(args) != 1{
 		return "", fmt.Errorf("参数不正确，需要一个 key")
 	}
@@ -90,4 +92,10 @@ func get(stub shim.ChaincodeStubInterface, args []string) (string, error){
 	}
 
 	return string(value),nil
+}
+
+func main(){
+	if err := shim.Start(new(SimpleAsset)); err != nil{
+		fmt.Printf("chaincode例程启动失败: %s\n", err)
+	}
 }
